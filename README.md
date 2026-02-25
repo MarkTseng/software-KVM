@@ -40,7 +40,7 @@ python -m src.main
 [A-PC (Controller)]                [B-PC (Target)]
      |                                    |
      +-- USB Port <-- CH9329/CH340 --+-- USB Port (HID)
-     |                                |
+     |                               |
      +-- USB Port <-- MS2130 HDMI ---+-- HDMI Out
                                      
 ```
