@@ -20,6 +20,11 @@ Find cables on:
 
 ## Installation
 
+MacOS
+```bash
+pip install -r requirements.txt
+```
+Linux
 ```bash
 pip install -r requirements.txt
 ```
