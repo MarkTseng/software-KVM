@@ -47,9 +47,8 @@ cp -r dist/"$APP_NAME" "$APP_NAME.AppDir/$APP_NAME"
 # Create AppRun
 cat > "$APP_NAME.AppDir/AppRun" << 'EOF'
 #!/bin/bash
-export APPDIR="$(dirname "$(readlink -f "$0")")"
-export PATH="$APPDIR/$APP_NAME:$PATH"
-exec "$APPDIR/$APP_NAME/$APP_NAME" "$@"
+export APPDIR="$(dirname "$(dirname "$(readlink -f "$0")")")"
+exec "$APPDIR/$APP_NAME" "$@"
 EOF
 chmod +x "$APP_NAME.AppDir/AppRun"
 
