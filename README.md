@@ -11,7 +11,7 @@ Cross-platform KVM software using CH9329 and video capture card.
 
 ## Hardware Requirements
 
-- **Video Capture**: MS2130-based HDMI capture card (USB)
+- **Video Capture**: MS2130-based HDMI capture card (USB) or any UVC device
 - **Keyboard/Mouse**: CH9329 + CH340 USB-to-Serial module
 
 Find cables on:
