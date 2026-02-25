@@ -230,7 +230,6 @@ class InputWidget(QWidget):
         
         if key not in (Qt.Key.Key_Shift, Qt.Key.Key_Control, Qt.Key.Key_Alt, Qt.Key.Key_Meta):
             if self._callback:
-                print(f"[KEY] Qt key={key}, mod={self._modifier_state:#x}")
                 self._callback(KeyEvent(
                     keycode=key,
                     is_press=True,
@@ -734,7 +733,8 @@ class MainWindow(QMainWindow):
             from ..hid.keymap import KeyMap
             hid_code = KeyMap.get_hid_code(event.keycode)
             if self._debug_mode:
-                print(f"[KEY] Qt key={event.keycode}, mod={event.modifier:#x} -> HID={hid_code:#x}")
+                key_info = f"[KEY] Qt key={event.keycode}, mod={event.modifier:#x} -> HID={hid_code:#x}"
+                self.log_label.setText(key_info)
             if hid_code:
                 self._ch9329.key_type(event.modifier, hid_code)
 

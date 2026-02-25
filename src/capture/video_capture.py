@@ -55,28 +55,42 @@ def _list_windows_devices() -> List[VideoDevice]:
 
 
 def _list_macos_devices() -> List[VideoDevice]:
-    devices = []
+    # Get names from ffmpeg first
+    ffmpeg_names = {}
     try:
         result = subprocess.run(
             ["ffmpeg", "-f", "avfoundation", "-list_devices", "true", "-i", ""],
             capture_output=True, text=True, timeout=5
         )
         lines = result.stderr.split("\n")
+        
+        in_video_section = False
         for line in lines:
-            if "[AVFoundation" in line and "video" in line.lower():
-                devices.append(VideoDevice(index=len(devices), name=line.strip()))
+            if "AVFoundation video devices:" in line:
+                in_video_section = True
+                continue
+            if "AVFoundation audio devices:" in line:
+                in_video_section = False
+                break
+            if in_video_section and "[AVFoundation" in line:
+                import re
+                match = re.search(r'\[(\d+)\]\s*(.+)$', line)
+                if match:
+                    idx = int(match.group(1))
+                    name = match.group(2).strip()
+                    ffmpeg_names[idx] = name
     except Exception:
         pass
-
-    if not devices:
-        index = 0
-        while index < 10:
-            cap = cv2.VideoCapture(index)
-            if cap.isOpened():
-                devices.append(VideoDevice(index=index, name=f"Camera {index}"))
-                cap.release()
-            index += 1
-
+    
+    # Probe OpenCV to find available indices
+    devices = []
+    for idx in range(10):
+        cap = cv2.VideoCapture(idx)
+        if cap.isOpened():
+            name = ffmpeg_names.get(idx, f"Camera {idx}")
+            devices.append(VideoDevice(index=idx, name=name))
+            cap.release()
+    
     return devices
 
 
