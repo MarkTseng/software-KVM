@@ -44,10 +44,11 @@ pyinstaller --name "$APP_NAME" \
 mkdir -p "$APP_NAME.AppDir"
 cp -r dist/"$APP_NAME" "$APP_NAME.AppDir/$APP_NAME"
 
-# Create AppRun
+# Create AppRun - use standard AppImage approach
 cat > "$APP_NAME.AppDir/AppRun" << 'EOF'
 #!/bin/bash
-export APPDIR="$(dirname "$(dirname "$(readlink -f "$0")")")"
+THIS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export APPDIR="${APPDIR:-$THIS_DIR}"
 exec "$APPDIR/$APP_NAME" "$@"
 EOF
 chmod +x "$APP_NAME.AppDir/AppRun"
