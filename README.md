@@ -45,6 +45,6 @@ python -m src.main
                                      
 ```
 
-## Based On
-
-- [Control3](https://github.com/sipper69/Control3) - Original C# implementation
+## Referance SW KVM link
+- [Control3](https://github.com/sipper69/Control3)
+- [SubConsole](https://github.com/ikemax2/SubConsole) 
