@@ -36,14 +36,8 @@ python -m src.main
 
 ## Connection Diagram
 
-```
-[A-PC (Controller)]                [B-PC (Target)]
-     |                                    |
-     +-- USB Port <-- CH9329/CH340 --+-- USB Port (HID)
-     |                               |
-     +-- USB Port <-- MS2130 HDMI ---+-- HDMI Out
-                                     
-```
+<img width="1024" height="1024" alt="KVM-connect" src="https://github.com/user-attachments/assets/046c4a7a-d896-4ffa-85b2-3bd6de256d77" />
+
 
 ## Referance SW KVM link
 - [Control3](https://github.com/sipper69/Control3)
