@@ -49,7 +49,7 @@ cat > "$APP_NAME.AppDir/AppRun" << 'EOF'
 #!/bin/bash
 THIS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export APPDIR="${APPDIR:-$THIS_DIR}"
-exec "$APPDIR/$APP_NAME" "$@"
+exec "$APPDIR/$APP_NAME/$APP_NAME" "$@"
 EOF
 chmod +x "$APP_NAME.AppDir/AppRun"
 
