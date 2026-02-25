@@ -26,9 +26,20 @@ pip install -r requirements.txt
 ```
 Linux
 ```bash
-pip install -r requirements.txt
+sudo apt install libxcb-cursor0
+pip install -r requirements.txt --break-system-packages
 ```
 
+## pyinstaller - python one binary package
+
+MacOS
+```bash
+pip install pyinstaller
+```
+Linux
+```bash
+pip install pyinstaller --break-system-packages
+```
 ## Usage
 
 ```bash
