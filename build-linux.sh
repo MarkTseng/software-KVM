@@ -44,11 +44,12 @@ pyinstaller --name "$APP_NAME" \
 mkdir -p "$APP_NAME.AppDir"
 cp -r dist/"$APP_NAME" "$APP_NAME.AppDir/$APP_NAME"
 
-# Create AppRun - direct relative path
+# Create AppRun - find executable relative to AppRun location
 cat > "$APP_NAME.AppDir/AppRun" << 'EOF'
 #!/bin/bash
-cd "$(dirname "${BASH_SOURCE[0]}")"
-exec "./$APP_NAME/$APP_NAME" "$@"
+self="${BASH_SOURCE[0]}"
+basedir="$(dirname "$self")"
+exec "$basedir/$APP_NAME/$APP_NAME" "$@"
 EOF
 chmod +x "$APP_NAME.AppDir/AppRun"
 
