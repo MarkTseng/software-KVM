@@ -55,34 +55,63 @@ def _list_windows_devices() -> List[VideoDevice]:
 
 
 def _list_macos_devices() -> List[VideoDevice]:
-    # Get names from ffmpeg first
     ffmpeg_names = {}
-    try:
-        result = subprocess.run(
-            ["ffmpeg", "-f", "avfoundation", "-list_devices", "true", "-i", ""],
-            capture_output=True, text=True, timeout=5
-        )
-        lines = result.stderr.split("\n")
-        
-        in_video_section = False
-        for line in lines:
-            if "AVFoundation video devices:" in line:
-                in_video_section = True
-                continue
-            if "AVFoundation audio devices:" in line:
-                in_video_section = False
-                break
-            if in_video_section and "[AVFoundation" in line:
-                import re
-                match = re.search(r'\[(\d+)\]\s*(.+)$', line)
-                if match:
-                    idx = int(match.group(1))
-                    name = match.group(2).strip()
-                    ffmpeg_names[idx] = name
-    except Exception:
-        pass
     
-    # Probe OpenCV to find available indices
+    ffmpeg_paths = ["ffmpeg", "/opt/homebrew/bin/ffmpeg", "/usr/local/bin/ffmpeg"]
+    env = None
+    
+    import os
+    if "PATH" not in os.environ or "/opt/homebrew/bin" not in os.environ.get("PATH", ""):
+        env = os.environ.copy()
+        env["PATH"] = "/opt/homebrew/bin:/usr/local/bin:" + env.get("PATH", "")
+    
+    for ffmpeg_cmd in ffmpeg_paths:
+        try:
+            result = subprocess.run(
+                [ffmpeg_cmd, "-f", "avfoundation", "-list_devices", "true", "-i", ""],
+                capture_output=True, text=True, timeout=5, env=env
+            )
+            lines = result.stderr.split("\n")
+            
+            in_video_section = False
+            for line in lines:
+                if "AVFoundation video devices:" in line:
+                    in_video_section = True
+                    continue
+                if "AVFoundation audio devices:" in line:
+                    in_video_section = False
+                    break
+                if in_video_section and "[AVFoundation" in line:
+                    import re
+                    match = re.search(r'\[(\d+)\]\s*(.+)$', line)
+                    if match:
+                        idx = int(match.group(1))
+                        name = match.group(2).strip()
+                        ffmpeg_names[idx] = name
+            if ffmpeg_names:
+                break
+        except Exception:
+            continue
+    
+    if not ffmpeg_names:
+        try:
+            result = subprocess.run(
+                ["system_profiler", "SPCameraDataType"],
+                capture_output=True, text=True, timeout=10
+            )
+            lines = result.stdout.split("\n")
+            current_idx = 0
+            for line in lines:
+                stripped = line.strip()
+                if stripped and not stripped.startswith("Model ID:") and not stripped.startswith("Unique ID:"):
+                    if stripped.endswith(":") and not stripped.startswith(" "):
+                        name = stripped[:-1].strip()
+                        if name and name != "Camera" and current_idx not in ffmpeg_names:
+                            ffmpeg_names[current_idx] = name
+                            current_idx += 1
+        except Exception:
+            pass
+    
     devices = []
     for idx in range(10):
         cap = cv2.VideoCapture(idx)
