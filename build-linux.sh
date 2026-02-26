@@ -47,9 +47,9 @@ cp -r dist/"$APP_NAME" "$APP_NAME.AppDir/usr/bin/"
 # Create AppRun
 cat > "$APP_NAME.AppDir/AppRun" << 'EOF'
 #!/bin/bash
-self="${BASH_SOURCE[0]}"
-basedir="$(dirname "$(dirname "$self")")"
-exec "$basedir/usr/bin/$APP_NAME/$APP_NAME" "$@"
+HERE="$(dirname "$(readlink -f "${0}")")"
+APP_NAME="SoftwareKVM"
+exec "${HERE}/usr/bin/${APP_NAME}" "$@"
 EOF
 chmod +x "$APP_NAME.AppDir/AppRun"
 
