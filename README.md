@@ -40,11 +40,17 @@ Linux
 ```bash
 pip install pyinstaller --break-system-packages
 ```
-create binary
+create MacOS binary
 ```bash
-./build.sh [mac|linux|windows]  - Build for specific platform
+./build.sh mac                    - Build for specific platform
 ./build.sh dmg                    - Create macOS DMG from built app (uses icon)
 ./build.sh clean                  - Clean build artifacts
+```
+
+create Linux(ubuntu-24.04) binary
+```bash
+./build-linux.sh                  - Build for specific platform
+./build-linux.sh clean            - Clean build artifacts
 ```
 ## Usage
 
