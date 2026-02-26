@@ -40,16 +40,16 @@ pyinstaller --name "$APP_NAME" \
     --collect-all PyQt6 \
     src/main.py
 
-# Create AppDir structure
-mkdir -p "$APP_NAME.AppDir"
-cp -r dist/"$APP_NAME" "$APP_NAME.AppDir/$APP_NAME"
+# Create AppDir structure - use standard AppImage layout
+mkdir -p "$APP_NAME.AppDir/usr/bin"
+cp -r dist/"$APP_NAME" "$APP_NAME.AppDir/usr/bin/"
 
-# Create AppRun - find executable relative to AppRun location
+# Create AppRun
 cat > "$APP_NAME.AppDir/AppRun" << 'EOF'
 #!/bin/bash
 self="${BASH_SOURCE[0]}"
-basedir="$(dirname "$self")"
-exec "$basedir/$APP_NAME/$APP_NAME" "$@"
+basedir="$(dirname "$(dirname "$self")")"
+exec "$basedir/usr/bin/$APP_NAME/$APP_NAME" "$@"
 EOF
 chmod +x "$APP_NAME.AppDir/AppRun"
 
