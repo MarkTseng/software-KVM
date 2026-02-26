@@ -49,7 +49,7 @@ cat > "$APP_NAME.AppDir/AppRun" << 'EOF'
 #!/bin/bash
 HERE="$(dirname "$(readlink -f "${0}")")"
 APP_NAME="SoftwareKVM"
-exec "${HERE}/usr/bin/${APP_NAME}" "$@"
+exec "${HERE}/usr/bin/${APP_NAME}/${APP_NAME}" "$@"
 EOF
 chmod +x "$APP_NAME.AppDir/AppRun"
 
